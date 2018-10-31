@@ -10,7 +10,9 @@
     <div class="class">
         <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
         <div class="col-12 mb-4 alert-primary">
-            Author: {{article.author}} <a href="#" onclick="confirm_delete()">delete</a>
+            Author: {{article.author}}
+            <a href="#" onclick="confirm_delete()">delete</a>
+            <a href="{% url 'article:article_update' article.id%}">edit</a>
         </div>
 
         <div class="col-12">
