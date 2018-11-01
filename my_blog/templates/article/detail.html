@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load staticfiles %}
+
 
 {%block title%}
     article.title
@@ -9,12 +9,15 @@
 <div class="container">
     <div class="class">
         <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
-        <div class="col-12 mb-4 alert-primary">
+        <div class="col-12 alert-primary">
             Author: {{article.author}}
             <a href="#" onclick="confirm_delete()">delete</a>
             <a href="{% url 'article:article_update' article.id%}">edit</a>
         </div>
-
+        <div class="col-12 alert-success">
+            <p>{{article.created}}</p>
+        </div>
+        <br>
         <div class="col-12">
             <p>{{article.body|safe}}</p>
         </div>

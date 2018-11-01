@@ -1,3 +1,6 @@
 django>=2.0
 markdown
 Pygments
+mysqlclient
+python-dateutil
+django-tz-detect
