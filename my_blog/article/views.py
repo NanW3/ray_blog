@@ -1,68 +1,38 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from article.models import ArticlePost
+from article.models import ArticlePost, Tag
 import markdown
-from article.form import ArticlePostForm
-from django.contrib.auth.models import User
-from django.core.paginator import Paginator
-from .paginator import getPages
+
+
+
+
 # Create your views here.
 
 
 def article_list(request):
-
-    current_page = request.GET.get("page", 1)
+    context = {}
+    tags = Tag.objects.all()
     articles = ArticlePost.objects.all()
-    pages, articles = getPages(request, articles)
-    articles = pages.page(current_page)
-    context = {'articles': articles, 'pages': pages}
+    context['articles'] = articles
+    context['tags'] = tags
     return render(request, 'article/list.html', context)
 
 def article_detail(request, id):
-    article = ArticlePost.objects.get(id=id)
+    context = {}
+    article = get_object_or_404(ArticlePost, pk=id)
     article.read_number += 1
     article.save()
     article.body = markdown.markdown(article.body, extensions=[
         'markdown.extensions.extra',
         'markdown.extensions.codehilite',
     ])
-    context = {'article': article}
+    context['article'] = article
     return render(request, 'article/detail.html', context)
 
-def article_create(request):
-    if request.method == 'POST':
-        article_post_form = ArticlePostForm(data=request.POST)
-        if article_post_form.is_valid():
-            new_article = article_post_form.save(commit=False)
-            new_article.author = User.objects.get(id=1)
-            new_article.save()
-            return redirect("article:article_list")
-        else:
-            return HttpResponse("Form has error, please re-enter!")
-    else:
-        article_post_form = ArticlePostForm()
-        context = {'article_post_form': article_post_form}
-        return render(request, 'article/create.html', context)
-
-def article_delete(request, id):
-    article = ArticlePost.objects.get(id=id)
-    article.delete()
-    return redirect("article:article_list")
-
-def article_update(request, id):
-    article = ArticlePost.objects.get(id=id)
-    if request.method == "POST":
-        article_post_form = ArticlePostForm(data=request.POST)
-        if article_post_form.is_valid():
-            article.title = request.POST['title']
-            article.body = request.POST['body']
-            article.save()
-            return redirect("article:article_detail", id=id)
-        else:
-            return HttpResponse("Form has Error, please re-enter!")
-    else:
-        article_post_form = ArticlePostForm()
-        context = { 'article': article, 'article_post_form': article_post_form}
-        return render(request, 'article/update.html', context)
-
-
+def articles_with_tag(request, tag_pk):
+    context = {}
+    tag = get_object_or_404(Tag, pk=tag_pk)
+    articles = ArticlePost.objects.filter(tag=tag)
+    context['articles'] = articles
+    context['tag'] = tag
+    return render(request, 'article/list.html', context)

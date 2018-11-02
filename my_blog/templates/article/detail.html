@@ -2,18 +2,17 @@
 
 
 {%block title%}
-    article.title
+    {{article.title}}
 {% endblock title%}
-
+{% block article_active %}active{%endblock%}
 {% block content%}
 <div class="container">
     <div class="class">
-        <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
-        <div class="col-12 alert-primary">
-            Author: {{article.author}}
-        </div>
-        <div class="col-12 date">
-            <p class="date">{{article.created}}</p>
+        <h1 class="col-12 mt-4">{{ article.title }}</h1>
+        <div class="col-12">
+            <p>Author: {{article.author}}</p>
+            <p>Created at: {{article.created | date:"m/d/Y G:n:s"}}</p>
+            <p>Type: <a href="{% url 'article:articles_with_tag' article.tag.pk%}">{{ article.tag }}</a> </p>
         </div>
         <br>
         <div class="col-12">
@@ -21,6 +20,4 @@
         </div>
     </div>
 </div>
-
-
 {% endblock content %}

@@ -7,4 +7,4 @@ from .models import Tag
 admin.site.register(Tag)
 @admin.register(ArticlePost)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'created')
+    list_display = ('title', 'tag', 'author', 'created')
