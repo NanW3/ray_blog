@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 
 
-
+EACHPAGE_NUMBER = 6
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'article',
+    'account',
     'tz_detect',
 ]
 

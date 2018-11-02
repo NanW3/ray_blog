@@ -4,17 +4,24 @@ from article.models import ArticlePost
 import markdown
 from article.form import ArticlePostForm
 from django.contrib.auth.models import User
-from dateutil import tz
+from django.core.paginator import Paginator
+from .paginator import getPages
 # Create your views here.
 
 
 def article_list(request):
+
+    current_page = request.GET.get("page", 1)
     articles = ArticlePost.objects.all()
-    context = {'articles': articles}
+    pages, articles = getPages(request, articles)
+    articles = pages.page(current_page)
+    context = {'articles': articles, 'pages': pages}
     return render(request, 'article/list.html', context)
 
 def article_detail(request, id):
     article = ArticlePost.objects.get(id=id)
+    article.read_number += 1
+    article.save()
     article.body = markdown.markdown(article.body, extensions=[
         'markdown.extensions.extra',
         'markdown.extensions.codehilite',
@@ -57,3 +64,5 @@ def article_update(request, id):
         article_post_form = ArticlePostForm()
         context = { 'article': article, 'article_post_form': article_post_form}
         return render(request, 'article/update.html', context)
+
+

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="container contact-form">
+    <div class="row">
+        <div class="col-12">
+            <form action="." method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="submit" value="Login">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
