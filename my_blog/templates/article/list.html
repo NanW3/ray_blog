@@ -21,8 +21,8 @@ Index
                             <div class="blog">
                                 <h3><a href="{% url 'article:article_detail' article.id %}">{{ article.title}}</a></h3>
                                 <p class="blog-info">
-                                    <span class="glyphicon glyphicon-tag"></span><a href="{% url 'article:articles_with_tag' article.tag.pk %}">{{ article.tag }}</a>
-                                    <span class="glyphicon glyphicon-time"></span>{{ article.created|date:"Y-m-d" }}
+                                    <a href="{% url 'article:articles_with_tag' article.tag.pk %}">{{ article.tag }}</a>
+                                    {{ article.created|date:"Y-m-d G:n:s" }}
                                 </p>
                                 <p>{{ article.body|striptags|truncatewords:100 | safe}}</p>
                                 <hr>

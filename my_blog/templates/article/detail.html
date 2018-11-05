@@ -1,22 +1,28 @@
 {% extends "base.html" %}
-
+{% load staticfiles %}
 
 {%block title%}
     {{article.title}}
 {% endblock title%}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'article/article_list.css' %}">
+{% endblock header_extends %}
 {% block article_active %}active{%endblock%}
 {% block content%}
 <div class="container">
-    <div class="class">
-        <h1 class="col-12 mt-4">{{ article.title }}</h1>
-        <div class="col-12">
-            <p>Author: {{article.author}}</p>
-            <p>Created at: {{article.created | date:"m/d/Y G:n:s"}}</p>
-            <p>Type: <a href="{% url 'article:articles_with_tag' article.tag.pk%}">{{ article.tag }}</a> </p>
-        </div>
-        <br>
-        <div class="col-12">
-            <p>{{article.body|safe}}</p>
+    <div class="row">
+        <div class="col-xs--10 col-xs-offset-1">
+            <h1>{{ article.title }}</h1>
+            <div>
+                <ul class="article-info-description">
+                    <li>Author: {{article.author}}</li>
+                    <li>Created at: {{article.created | date:"m/d/Y G:n:s"}}</li>
+                    <li>Type: <a href="{% url 'article:articles_with_tag' article.tag.pk%}">{{ article.tag }}</a></li>
+                </ul>
+            </div>
+            <div>
+                <p>{{article.body|safe}}</p>
+            </div>
         </div>
     </div>
 </div>

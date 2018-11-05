@@ -35,4 +35,5 @@ def articles_with_tag(request, tag_pk):
     articles = ArticlePost.objects.filter(tag=tag)
     context['articles'] = articles
     context['tag'] = tag
+    context['tags'] = Tag.objects.all()
     return render(request, 'article/tag_list.html', context)
