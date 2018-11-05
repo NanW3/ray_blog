@@ -4,31 +4,53 @@
 {% block title %}
 Index
 {% endblock title %}
-{% block article_active %}active{%endblock%}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'article/article_list.css' %}">
+{% endblock header_extends %}
+{% block article_active %}active{%endblock article_active%}
 {%block content %}
     <div class="container">
         <div class="row">
-            <div class="col-8">
-              {% for article in articles %}
-                <h4>{{ article.title}}</h4>
-                <p>{{ article.body|striptags|truncatewords:100 | safe}}</p>
-                <p><a href="{% url 'article:article_detail' article.id %}">Read More</a></p>
-                <hr>
-            {% endfor %}
+            <div class="col-xs-12 col-md-8 col-sm-8">
+                <div class="card">
+                    <div class="card-header">
+                        {% block blog_list_title %}Article List（Total {{ articles|length }} articles）{% endblock %}
+                    </div>
+                    <div class="card-body">
+                        {% for article in articles %}
+                            <div class="blog">
+                                <h3><a href="{% url 'article:article_detail' article.id %}">{{ article.title}}</a></h3>
+                                <p class="blog-info">
+                                    <span class="glyphicon glyphicon-tag"></span><a href="{% url 'article:articles_with_tag' article.tag.pk %}">{{ article.tag }}</a>
+                                    <span class="glyphicon glyphicon-time"></span>{{ article.created|date:"Y-m-d" }}
+                                </p>
+                                <p>{{ article.body|striptags|truncatewords:100 | safe}}</p>
+                                <hr>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
             </div>
-            <div class="col-4">
-                <h4>Article Tags</h4>
-                <ul>
-                    {%for tag in tags%}
-                    <li>
-                        <a href="{% url 'article:articles_with_tag' tag.pk%}">{{tag.tag_name}}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+            <div class="hidden-xs col-md-4 col-sm-4">
+                <div class="card">
+                    <div class="card-header">
+                        Article Tags
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            {%for tag in tags%}
+                            <li>
+                                <a href="{% url 'article:articles_with_tag' tag.pk%}">{{tag.tag_name}}</a>
+                            </li>
+                            {% empty %}
+                            <li>No Tags</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-<div>
 
 {%endblock content %}
-

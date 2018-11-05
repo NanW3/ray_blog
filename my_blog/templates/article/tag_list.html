@@ -1,0 +1,6 @@
+{%extends 'article/list.html'%}
+{%block title%}{{article_tag.tag_name}}{% endblock %}
+{% block blog_list_title %}
+    Tag：{{ article.tag }}（Total {{ articles|length }} articles）
+    <a href="{% url 'article:article_list' %}">All articles</a>
+{% endblock %}
