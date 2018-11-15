@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from article.models import ArticlePost, Tag
+from django.core.paginator import Paginator
 import markdown
 
 
@@ -10,9 +11,12 @@ import markdown
 
 
 def article_list(request):
+    page = request.GET.get('page' , 1)
+    articles = ArticlePost.objects.all()
+    paginator = Paginator(articles, 10)
+    articles = paginator.get_page(page)
     context = {}
     tags = Tag.objects.all()
-    articles = ArticlePost.objects.all()
     context['articles'] = articles
     context['tags'] = tags
     return render(request, 'article/list.html', context)

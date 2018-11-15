@@ -18,6 +18,7 @@ div.blog-content{
 }
 
 ul.article-info-description {
+    padding-left: 0px;
     list-style-type: none;
     margin-bottom: 1em;
 }
