@@ -21,6 +21,19 @@
             <div>
                 <p>{{article.body|safe}}</p>
             </div>
+            <hr>
+            <ul class="pager">
+                {% if previous_article is None %}
+                    <li>Prev: No more previous article</li>
+                {% else %}
+                    <li>Prev: <a href="{% url 'article:article_detail' previous_article.pk%}">{{previous_article.title}}</a></li>
+                {% endif %}
+                {% if next_article is None %}
+                    <li>Next: No more next article</li>
+                {% else %}
+                    <li>Next: <a href="{% url 'article:article_detail' next_article.pk%}">{{next_article.title}}</a></li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </div>

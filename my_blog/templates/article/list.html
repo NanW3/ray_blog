@@ -24,7 +24,7 @@ Index
                                     <img src="{% static 'image/tags.svg'%}" width="15" height="15"><a href="{% url 'article:articles_with_tag' article.tag.pk %}">{{ article.tag }}</a>
                                     <img src="{% static 'image/clock.svg'%}" width="15" height="15">{{ article.created|date:"Y-m-d G:n:s" }}
                                 </p>
-                                <p>{{ article.body|striptags|truncatewords:100 | safe}}</p>
+                                <p>{{ article.body|striptags|truncatewords:100 | safe}}...</p>
                                 <hr>
                             </div>
                         {% endfor %}
@@ -35,7 +35,7 @@ Index
                   <ul class="pagination">
                     <li class="page-item">
                         {% if articles.has_previous %}
-                          <a class="page-link" href="/article/article-list/?page={{articles.previous_page_number}}" aria-label="Previous">
+                          <a class="page-link" href="?page={{articles.previous_page_number}}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                             <span class="sr-only">Previous</span>
                           </a>
@@ -46,18 +46,25 @@ Index
                           </a>
                         {% endif %}
                     </li>
-                    {% for page_num in articles.paginator.page_range %}
+                    {% for page_num in page_range %}
                         {% if page_num == articles.number %}
-                            <li class="page-item active"><a class="page-link" href="/article/article-list/?page={{page_num}}">{{page_num}}</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">{{page_num}}</a></li>
                         {% else %}
-                            <li class="page-item"><a class="page-link" href="/article/article-list/?page={{page_num}}">{{page_num}}</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{page_num}}">{{page_num}}</a></li>
                         {% endif %}
                     {% endfor %}
                     <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                      </a>
+                      {% if articles.has_next %}
+                          <a class="page-link" href="?page={{articles.next_page_number}}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                          </a>
+                        {% else %}
+                          <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                          </a>
+                        {% endif %}
                     </li>
                   </ul>
                 </nav>
