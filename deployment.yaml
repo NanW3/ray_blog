@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    app: ray-blog
+  name: ray-blog-deploy
+  namespace: ray-blog-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ray-blog
+  template:
+    metadata:
+      labels:
+        app: ray-blog
+      name: ray-blog
+    spec:
+      containers:
+      - env:
+        - name: PODID
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        image: lyray1994/ray_blog:1.0 
+        name: ray-blog
+        ports:
+        - containerPort: 8000
+          protocol: TCP
