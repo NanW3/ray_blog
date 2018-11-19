@@ -78,7 +78,7 @@ Index
                         <ul>
                             {%for tag in tags%}
                             <li>
-                                <a href="{% url 'article:articles_with_tag' tag.pk%}">{{tag.tag_name}}</a>
+                                <a href="{% url 'article:articles_with_tag' tag.pk%}">{{tag.tag_name}}</a>({{tag.article_count}})
                             </li>
                             {% empty %}
                             <li>No Tags</li>

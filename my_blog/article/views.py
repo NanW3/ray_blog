@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from article.models import ArticlePost, Tag
 from django.core.paginator import Paginator
+from django.db.models import Count
 import markdown
 
 
@@ -30,9 +31,8 @@ def article_list(request):
     elif cur_num + 2 == paginator.num_pages - 1:
         page_range.append(paginator.num_pages)
     context = {}
-    tags = Tag.objects.all()
     context['articles'] = articles
-    context['tags'] = tags
+    context['tags'] = Tag.objects.annotate(article_count=Count('articlepost'))
     context['page_range'] = page_range
     return render(request, 'article/list.html', context)
 
@@ -72,9 +72,8 @@ def articles_with_tag(request, tag_pk):
     elif cur_num + 2 == paginator.num_pages - 1:
         page_range.append(paginator.num_pages)
     context = {}
-    tags = Tag.objects.all()
     context['tag'] = tag
     context['articles'] = articles
-    context['tags'] = tags
+    context['tags'] = Tag.objects.annotate(article_count=Count('articlepost'))
     context['page_range'] = page_range
     return render(request, 'article/tag_list.html', context)
