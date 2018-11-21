@@ -18,7 +18,7 @@
                 <li>Created at: {{article.created | date:"m/d/Y G:n:s"}}</li>
                 <li>Type: <a href="{% url 'article:articles_with_tag' article.tag.pk%}">{{ article.tag }}</a></li>
             </ul>
-            <div>
+            <div class="shadow-sm p-3 mb-5 bg-white rounded">
                 <p>{{article.body|safe}}</p>
             </div>
             <hr>
