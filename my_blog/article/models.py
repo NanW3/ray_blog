@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.urls import reverse
+from ckeditor.fields import RichTextField
 # Create your models here.
 
 class Tag(models.Model):
@@ -13,7 +14,7 @@ class Tag(models.Model):
 class ArticlePost(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    body = models.TextField()
+    body = RichTextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     tag = models.ForeignKey(Tag, on_delete=models.DO_NOTHING)

@@ -4,3 +4,4 @@ Pygments
 mysqlclient
 python-dateutil
 django-tz-detect
+django-ckeditor

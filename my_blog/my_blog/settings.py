@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'article',
     'account',
     'tz_detect',
+    'ckeditor'
 ]
 
 MIDDLEWARE = [

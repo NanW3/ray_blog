@@ -39,7 +39,8 @@ def article_list(request):
 def article_detail(request, id):
     context = {}
     article = get_object_or_404(ArticlePost, pk=id)
-    article.read_number += 1
+    if not request.COOKIES.get("read_%s" % id):
+        article.read_number += 1
     article.save()
     article.body = markdown.markdown(article.body, extensions=[
         'markdown.extensions.extra',
@@ -48,9 +49,10 @@ def article_detail(request, id):
     context['next_article'] = ArticlePost.objects.filter(created__gt=article.created).last()
     context['previous_article'] = ArticlePost.objects.filter(created__lt=article.created).first()
     context['article'] = article
-    # print (ArticlePost.objects.filter(created__gt=article.created).last())
-    return render(request, "article/detail.html", context)
-
+    context['read'] = article.read_number
+    response = render(request, "article/detail.html", context)
+    response.set_cookie("read_%s" % article.id, "true")
+    return response
 def articles_with_tag(request, tag_pk):
     tag = get_object_or_404(Tag, pk=tag_pk)
     page = request.GET.get('page', 1)
