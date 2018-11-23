@@ -18,7 +18,7 @@ class ArticlePost(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     tag = models.ForeignKey(Tag, on_delete=models.DO_NOTHING)
-    read_number = models.IntegerField(default=0)
+
     class Meta:
         ordering = ('-created',)
 
@@ -28,3 +28,10 @@ class ArticlePost(models.Model):
     def get_absolute_url(self):
         return reverse('article:article_detail', args=[self.objects.id])
 
+    def read_number(self):
+        return self.readnum.read_num
+
+
+class ReadNum(models.Model):
+    read_num = models.IntegerField(default=0)
+    articlepost = models.OneToOneField(ArticlePost, on_delete=models.DO_NOTHING)

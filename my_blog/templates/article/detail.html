@@ -19,7 +19,7 @@
                 <li>Type: <a href="{% url 'article:articles_with_tag' article.tag.pk%}">{{ article.tag }}</a></li>
                 <li>Read({{read}})</li>
             </ul>
-            <div class="shadow-sm p-3 mb-5 bg-white rounded">
+            <div class="shadow-sm p-3 mb-2 bg-white rounded">
                 <p>{{article.body|safe}}</p>
             </div>
             <hr>
@@ -36,6 +36,33 @@
                 {% endif %}
             </ul>
         </div>
+    </div>
+    <div class="row">
+        <div style="margin-top:2em;border:1px dashed;padding:2em;">
+            提交评论区域
+            {% if user.is_authenticated %}
+                已登录
+            {% else %}
+                未登录
+                <form action="{% url 'login' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                      <label for="username" class="col-form-label">Username</label>
+                      <div class="col-10">
+                        <input name="username" class="form-control" type="text" placeholder="Username" id="username">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="password" class="col-form-label">Password</label>
+                      <div class="col-10">
+                        <input name="password" class="form-control" type="password"  id="password">
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            {% endif %}
+        </div>
+        <div style="margin-top:2em;border:1px dashed;padding:2em;">评论列表区域</div>
     </div>
 </div>
 {% endblock content %}

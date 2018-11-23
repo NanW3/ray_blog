@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from article.models import ArticlePost, Tag
+from article.models import ArticlePost, Tag, ReadNum
 from django.core.paginator import Paginator
 from django.db.models import Count
 import markdown
@@ -40,7 +40,12 @@ def article_detail(request, id):
     context = {}
     article = get_object_or_404(ArticlePost, pk=id)
     if not request.COOKIES.get("read_%s" % id):
-        article.read_number += 1
+        if ReadNum.objects.filter(articlepost=article).count():
+            readnum = ReadNum.objects.get(articlepost=article)
+        else:
+            readnum = ReadNum(articlepost=article)
+        readnum.read_num += 1
+        readnum.save()
     article.save()
     article.body = markdown.markdown(article.body, extensions=[
         'markdown.extensions.extra',
@@ -53,6 +58,7 @@ def article_detail(request, id):
     response = render(request, "article/detail.html", context)
     response.set_cookie("read_%s" % article.id, "true")
     return response
+
 def articles_with_tag(request, tag_pk):
     tag = get_object_or_404(Tag, pk=tag_pk)
     page = request.GET.get('page', 1)
