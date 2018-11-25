@@ -13,6 +13,7 @@ def login(request):
     referer = request.META.get('HTTP_REFERER', '/')
     if user is not None:
         auth.login(request, user)
+        print (referer)
         return redirect(referer)
     else:
-        return render(request, 'error.html', {'message': 'Username/Password incorrect!'})
+        return render(request, 'error.html', {'message': 'Username/Password incorrect!', 'redirect_to':referer})
