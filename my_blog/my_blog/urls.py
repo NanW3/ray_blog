@@ -23,5 +23,6 @@ urlpatterns = [
     path('article/', include('article.urls', namespace='article')),
     path('account/', include('account.urls', namespace='account')),
     path('tz_detect/', include('tz_detect.urls')),
-    path('login/', views.login, name='login')
+    path('login/', views.login, name='login'),
+    path('comment/', include('comments.urls'))
 ]

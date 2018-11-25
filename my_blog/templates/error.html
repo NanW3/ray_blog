@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}Login Failed{% endblock %}
+{% block title %}Error{% endblock %}
 {% block home_active %}active{%endblock%}
 {% block content %}
-{{message}}
+{{message}}. <a href="{{redirect_to}}">Return</a>
 {% endblock content%}
