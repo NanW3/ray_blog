@@ -24,5 +24,6 @@ urlpatterns = [
     path('account/', include('account.urls', namespace='account')),
     path('tz_detect/', include('tz_detect.urls')),
     path('login/', views.login, name='login'),
+    path('register/', views.register, name='register'),
     path('comment/', include('comments.urls'))
 ]
