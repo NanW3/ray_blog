@@ -9,6 +9,9 @@ def home(request):
     return render(request, 'home.html', context)
 
 def login(request):
+    print(request.user)
+    print(request.environ)
+    print (dir(request))
     if request.method == 'POST':
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
@@ -26,7 +29,7 @@ def register(request):
     if request.method == 'POST':
         reg_form = RegForm(request.POST)
         if reg_form.is_valid():
-            username = reg_form.cleaned_data['username']
+            username = reg_form.cleaned_data['usernamee']
             email = reg_form.cleaned_data['email']
             password = reg_form.cleaned_data['password']
 

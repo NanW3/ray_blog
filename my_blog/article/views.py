@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 from article.models import ArticlePost, Tag, ReadNum
 from comments.models import Comment
+from comments.forms import CommentForm
 import markdown
 
 
@@ -54,12 +55,13 @@ def article_detail(request, id):
         'markdown.extensions.codehilite',
     ])
     article_content_type = ContentType.objects.get_for_model(article)
-    comments = Comment.objects.filter(content_type=article_content_type, object_id=article.id)
+    comments = Comment.objects.filter(content_type=article_content_type, object_id=id)
     context['next_article'] = ArticlePost.objects.filter(created__gt=article.created).last()
     context['previous_article'] = ArticlePost.objects.filter(created__lt=article.created).first()
     context['article'] = article
     context['read'] = article.read_number
     context['comments'] = comments
+    context['comment_form'] = CommentForm(initial={'content_type':article_content_type.model, 'object_id': article.id})
     response = render(request, "article/detail.html", context)
     response.set_cookie("read_%s" % article.id, "true")
     return response
