@@ -6,6 +6,8 @@
 {% endblock title%}
 {% block header_extends %}
     <link rel="stylesheet" href="{% static 'article/article_list.css' %}">
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 {% endblock header_extends %}
 {% block article_active %}active{%endblock%}
 {% block content%}
@@ -44,13 +46,14 @@
                 {% if user.is_authenticated %}
                     {{ user.username }} login successfully.
                     Welcome to comment~
-                    <form id="comment_form" action="{% url 'update_comment' %}" method="POST">
+                    <form id="comment_form" action="{% url 'update_comment' %}" method="POST" style="overflow:hidden">
                         {% csrf_token %}
                         {% for field in comment_form %}
                             {{field}}
                         {% endfor %}
                         <span id="comment_error" class="text-danger pull-left"></span>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <br>
+                        <input type="submit" class="btn btn-primary">
                     </form>
                 {% else %}
                     Need to login to comment
@@ -65,9 +68,9 @@
                     {% for comment in comments %}
                         <div>
                             {{comment.user.username}}
-                            {{comment.comment_time|date:"Y-m-d H:n:s"}}
+                            {{comment.comment_time|date:"Y-m-d H:i:s"}}
                             <br>
-                            {{comment.text}}
+                            {{comment.text|safe}}
                             <hr>
                         </div>
                     {% empty %}
@@ -82,34 +85,42 @@
 {% endblock content %}
 
 {% block script_extends%}
-<script type="text/javascript">
-    $('#comment_form').submit(function () {
-        $("#comment_error").text('');
-        if (CKEDITOR.instances["id_text"].document.getBody().getText().trim()=='') {
-            $("#comment_error").text("Comment cannot be empty");
-            return false
-        }
-
-        CKEDITOR.instances['id_text'].updateElement();
-
-        $.ajax({
-            url: "{% url 'update_comment' %}",
-            type: 'POST',
-            data: $(this).serialize(),
-            cache: false,
-            success: function(data) {
-                console.log(data);
-                if (data['status'] == "SUCCESS") {
-                    var comment_html = '<div>' + data['username'] + '(' + data['comment_time'] + '):' + data['text'] + '</div>';
-                    $("#comment_list").prepend(comment_html);
-                    CKEDITOR.instances['id_text'].setData('');
-                }
-            },
-            error: function (xhr) {
-                console.log(xhr)
+    <script type="text/javascript">
+        $("#comment_form").submit(function(){
+            // 判断是否为空
+            $("#comment_error").text('');
+            if(CKEDITOR.instances["id_text"].document.getBody().getText().trim()==''){
+                $("#comment_error").text('评论内容不能为空');
+                return false;
             }
+            // 更新数据到textarea
+            CKEDITOR.instances['id_text'].updateElement();
+            // 异步提交
+            $.ajax({
+                url: "{% url 'update_comment' %}",
+                type: 'POST',
+                data: $(this).serialize(),
+                cache: false,
+                success: function(data){
+                    console.log(data);
+                    if(data['status']=="SUCCESS"){
+                        // 插入数据
+                        var comment_html = '<div>' + data['username'] +
+                                           ' (' + data['comment_time'] + ')：' +
+                                           data['text'] + '</div>';
+                        $("#comment_list").prepend(comment_html);
+                        // 清空编辑框的内容
+                        CKEDITOR.instances['id_text'].setData('');
+                    }else{
+                        // 显示错误信息
+                        $("#comment_error").text(data['message']);
+                    }
+                },
+                error: function(xhr){
+                    console.log(xhr);
+                }
+            });
+            return false;
         });
-        return false
-    })
-</script>
+    </script>
 {% endblock %}

@@ -138,8 +138,8 @@ USE_TZ = True
 
 CKEDITOR_CONFIGS = {
     'comment_ckeditor': {
-        'toolbar': 'Custom',
-        'toolbar_Custom': [
+        'toolbar': 'custom',
+        'toolbar_custom': [
             ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
             ["TextColor", "BGColor", 'RemoveFormat'],
             ['NumberedList', 'BulletedList'],
@@ -153,7 +153,6 @@ CKEDITOR_CONFIGS = {
         'resize_enabled': False,
     }
 }
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 

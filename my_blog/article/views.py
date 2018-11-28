@@ -61,7 +61,7 @@ def article_detail(request, id):
     context['article'] = article
     context['read'] = article.read_number
     context['comments'] = comments
-    context['comment_form'] = CommentForm(initial={'content_type':article_content_type.model, 'object_id': article.id})
+    context['comment_form'] = CommentForm(initial={'content_type':article_content_type.model, 'object_id': id})
     response = render(request, "article/detail.html", context)
     response.set_cookie("read_%s" % article.id, "true")
     return response

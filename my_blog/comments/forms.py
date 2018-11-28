@@ -23,7 +23,7 @@ class CommentForm(forms.Form):
         object_id = self.cleaned_data['object_id']
         try:
             model_class = ContentType.objects.get(model=content_type).model_class()
-            model_obj = model_class.objects.get(pk=object_id)
+            model_obj = model_class.objects.get(id=object_id)
             self.cleaned_data['content_object'] = model_obj
         except ObjectDoesNotExist:
             raise forms.ValidationError('Comment object does not exist')
