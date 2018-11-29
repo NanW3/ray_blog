@@ -29,7 +29,7 @@ def register(request):
     if request.method == 'POST':
         reg_form = RegForm(request.POST)
         if reg_form.is_valid():
-            username = reg_form.cleaned_data['usernamee']
+            username = reg_form.cleaned_data['username']
             email = reg_form.cleaned_data['email']
             password = reg_form.cleaned_data['password']
 
