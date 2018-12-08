@@ -55,7 +55,7 @@ def article_detail(request, id):
         'markdown.extensions.codehilite',
     ])
     article_content_type = ContentType.objects.get_for_model(article)
-    comments = Comment.objects.filter(content_type=article_content_type, object_id=id)
+    comments = Comment.objects.filter(content_type=article_content_type, object_id=id, parent=None)
     context['next_article'] = ArticlePost.objects.filter(created__gt=article.created).last()
     context['previous_article'] = ArticlePost.objects.filter(created__lt=article.created).first()
     context['article'] = article
