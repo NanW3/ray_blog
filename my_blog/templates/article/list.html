@@ -1,5 +1,6 @@
 {% extends "base.html"%}
 {% load staticfiles %}
+{% load comment_tags %}
 
 {% block title %}
 Index
@@ -23,6 +24,7 @@ Index
                                 <p class="blog-info">
                                     <img src="{% static 'image/tags.svg'%}" width="15" height="15"><a href="{% url 'article:articles_with_tag' article.tag.pk %}">{{ article.tag }}</a>
                                     <img src="{% static 'image/clock.svg'%}" width="15" height="15">{{ article.created|date:"Y-m-d G:n:s" }}
+                                    Comments:({%  get_comment_count article %})
                                 </p>
                                 <p>{{ article.body|striptags|truncatewords:100 | safe}}...</p>
                                 <hr>

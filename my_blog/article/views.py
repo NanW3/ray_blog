@@ -61,6 +61,7 @@ def article_detail(request, id):
     context['article'] = article
     context['read'] = article.read_number
     context['comments'] = comments.order_by('-comment_time')
+    context['comment_count'] = Comment.objects.filter(content_type=article_content_type, object_id=id).count()
     context['comment_form'] = CommentForm(initial={'content_type':article_content_type.model, 'object_id': id, 'reply_comment_id': 0})
     print (context['comments'])
     response = render(request, "article/detail.html", context)
