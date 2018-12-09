@@ -17,7 +17,7 @@ class ArticlePost(models.Model):
     body = RichTextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    tag = models.ForeignKey(Tag, on_delete=models.DO_NOTHING)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('-created',)
@@ -34,4 +34,4 @@ class ArticlePost(models.Model):
 
 class ReadNum(models.Model):
     read_num = models.IntegerField(default=0)
-    articlepost = models.OneToOneField(ArticlePost, on_delete=models.DO_NOTHING)
+    articlepost = models.OneToOneField(ArticlePost, on_delete=models.CASCADE)

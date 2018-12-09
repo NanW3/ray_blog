@@ -137,9 +137,7 @@ USE_L10N = True
 USE_TZ = True
 
 CKEDITOR_CONFIGS = {
-    'default': {
-            'toolbar': None,
-        },
+    'default': {},
     'comment_ckeditor': {
         'toolbar': 'custom',
         'toolbar_custom': [

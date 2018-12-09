@@ -55,15 +55,11 @@ def article_detail(request, id):
         'markdown.extensions.codehilite',
     ])
     article_content_type = ContentType.objects.get_for_model(article)
-    comments = Comment.objects.filter(content_type=article_content_type, object_id=id, parent=None)
     context['next_article'] = ArticlePost.objects.filter(created__gt=article.created).last()
     context['previous_article'] = ArticlePost.objects.filter(created__lt=article.created).first()
     context['article'] = article
     context['read'] = article.read_number
-    context['comments'] = comments.order_by('-comment_time')
     context['comment_count'] = Comment.objects.filter(content_type=article_content_type, object_id=id).count()
-    context['comment_form'] = CommentForm(initial={'content_type':article_content_type.model, 'object_id': id, 'reply_comment_id': 0})
-    print (context['comments'])
     response = render(request, "article/detail.html", context)
     response.set_cookie("read_%s" % article.id, "true")
     return response

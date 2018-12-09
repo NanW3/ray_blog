@@ -45,10 +45,14 @@
             <div class="comment-area">
                 <h3 class="comment-area-title">Submit Comment</h3>
                 {% if user.is_authenticated %}
-                    {{ user.username }} login successfully.
-                    Welcome to comment~
                     <form id="comment_form" action="{% url 'update_comment' %}" method="POST" style="overflow:hidden">
+                        <label>{{ user.username }} login successfully. Welcome to comment~</label>
+                        <div id="reply_content_container" style="display:none;">
+                                <p id="reply_title">Reply to：</p>
+                                <div id="reply_content"></div>
+                        </div>
                         {% csrf_token %}
+                        {% get_comment_form article as comment_form %}
                         {% for field in comment_form %}
                             {{field}}
                         {% endfor %}
@@ -66,6 +70,7 @@
             <div class="comment-area">
                 <h3 class="comment-area-title">Comment List</h3>
                 <div id="comment_list">
+                    {% get_comment_list article as comments %}
                     {% for comment in comments %}
                         <div id="root_{{ comment.pk }}" class="comment">
                             <span>{{comment.user.username}}</span>
@@ -79,12 +84,12 @@
                                 <div class="reply">
                                     <span>{{ reply.user.username }}</span>
                                     <span>({{ reply.comment_time|date:"Y-m-d H:i:s" }})</span>
-                                    <span>回复</span>
+                                    <span>Reply</span>
                                     <span>{{ reply.reply_to.username }}：</span>
                                     <div id="comment_{{ reply.pk }}">
                                         {{ reply.text|safe }}
                                     </div>
-                                    <a href="javascript:reply({{ reply.pk }});">回复</a>
+                                    <a href="javascript:reply({{ reply.pk }});">Reply</a>
                                 </div>
                             {% endfor %}
                         </div>
@@ -101,6 +106,19 @@
 
 {% block script_extends%}
     <script type="text/javascript">
+        function numFormat(num){
+            return ('00' + num).substr(-2);
+        }
+        function timeFormat(timestamp){
+            var datetime = new Date(timestamp * 1000);
+            var year = numFormat(datetime.getFullYear());
+            var month = numFormat(datetime.getMonth() + 1);
+            var day = numFormat(datetime.getDate());
+            var hour = numFormat(datetime.getHours());
+            var minute = numFormat(datetime.getMinutes());
+            var second = numFormat(datetime.getSeconds());
+            return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+        }
         $("#comment_form").submit(function(){
             // 判断是否为空
             $("#comment_error").text('');
@@ -122,15 +140,21 @@
                         // 插入数据
                         if($('#reply_comment_id').val()=='0'){
                             // 插入评论
-                            var comment_html = '<div id="root_' + data['pk'] + '" class="comment"><span>' + data['username'] + '</span><span> (' + data['comment_time'] + ')：</span><div id="comment_' + data['pk'] + '">' + data['text'] + '</div><a href="javascript:reply(' + data['pk'] + ');">回复</a></div>';
+                            console.log(data['comment_time'])
+                            console.log(timeFormat(data['comment_time']))
+                            var comment_html = '<div id="root_' + data['pk'] + '" class="comment"><span>' + data['username'] + '</span><span> (' + timeFormat(data['comment_time']) + ')：</span><div id="comment_' + data['pk'] + '">' + data['text'] + '</div><a href="javascript:reply(' + data['pk'] + ');">回复</a></div>';
                             $("#comment_list").prepend(comment_html);
                         }else{
                             // 插入回复
-                            var reply_html ='<div class="reply"><span>' + data['username'] + '</span><span> (' + data['comment_time'] + ')</span><span> Reply </span><span>' + data['reply_to'] + '：</span><div id="comment_' + data['pk'] + '">' + data['text'] + '</div><a href="javascript:reply(' + data['pk'] + ');">回复</a></div>';
+                            var reply_html ='<div class="reply"><span>' + data['username'] + '</span><span> (' + timeFormat(data['comment_time']) + ')</span><span> Reply </span><span>' + data['reply_to'] + '：</span><div id="comment_' + data['pk'] + '">' + data['text'] + '</div><a href="javascript:reply(' + data['pk'] + ');">回复</a></div>';
                             $("#root_" + data['root_pk']).append(reply_html);
                         }
                         // 清空编辑框的内容
                         CKEDITOR.instances['id_text'].setData('');
+                        $('#reply_content_container').hide();
+                        $('#reply_comment_id').val('0');
+                        $('#no_comment').remove();
+                        $("#comment_error").text('Successfully comment!');
                     }else{
                         // 显示错误信息
                         $("#comment_error").text(data['message']);
